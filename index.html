@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ruang Belajar SPEMDA K8 - Pendidikan Pancasila</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for Celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        spemda: {
+                            navy: '#0F2C59',
+                            blue: '#1E56A0',
+                            sky: '#00A8CC',
+                            yellow: '#FFC436',
+                            orange: '#FF7B54',
+                            green: '#2EC4B6',
+                            purple: '#845EC2',
+                            pink: '#FF6F91',
+                            cream: '#FFF8EA',
+                        }
+                    },
+                    fontFamily: {
+                        heading: ['Fredoka', 'sans-serif'],
+                        body: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        '4xl': '2rem',
+                        '5xl': '2.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #F4F7FE;
+            background-image: radial-gradient(#e2e8f0 1.2px, transparent 1.2px);
+            background-size: 24px 24px;
+        }
+
+        h1, h2, h3, h4, .font-heading {
+            font-family: 'Fredoka', sans-serif;
+        }
+
+        .bounce-hover {
+            transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .bounce-hover:hover {
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        .pulse-slow {
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .float-anim {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EDF2F7;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3182CE;
+            border-radius: 8px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2B6CB0;
+        }
+
+        /* Certificate Styling */
+        .cert-border {
+            border: 12px solid #0F2C59;
+            outline: 4px dashed #FFC436;
+            outline-offset: -8px;
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased min-h-screen flex flex-col justify-between selection:bg-spemda-yellow selection:text-spemda-navy">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-spemda-yellow shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Brand Logo & Name -->
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateToStep(1)">
+                <div class="w-12 h-12 bg-spemda-navy rounded-2xl flex items-center justify-center text-white shadow-md transform -rotate-3 hover:rotate-0 transition-transform">
+                    <i class="fa-solid fa-scale-balanced text-2xl text-spemda-yellow"></i>
+                </div>
+                <div>
+                    <span class="text-xs font-bold uppercase tracking-wider text-spemda-blue bg-blue-100 px-2 py-0.5 rounded-full">SMP Muhammadiyah 2 Surabaya</span>
+                    <h1 class="text-xl sm:text-2xl font-bold text-spemda-navy leading-none mt-0.5">Ruang Belajar <span class="text-spemda-orange">SPEMDA K8</span></h1>
+                </div>
+            </div>
+
+            <!-- Learning Progress & Action Buttons -->
+            <div class="flex items-center space-x-3">
+                <!-- Progress Indicator -->
+                <div class="hidden md:flex items-center bg-slate-100 rounded-full px-4 py-2 border border-slate-200">
+                    <span class="text-xs font-bold text-slate-600 mr-2"><i class="fa-solid fa-flag-checkered text-spemda-green mr-1"></i> Progres:</span>
+                    <div class="w-28 bg-slate-200 h-3 rounded-full overflow-hidden">
+                        <div id="overallProgressBar" class="bg-gradient-to-r from-spemda-sky to-spemda-green h-full w-[14%] transition-all duration-500"></div>
+                    </div>
+                    <span id="overallProgressText" class="text-xs font-extrabold text-spemda-navy ml-2">14%</span>
+                </div>
+
+                <!-- Teacher Dashboard Button -->
+                <button onclick="openTeacherModal()" class="bg-spemda-navy hover:bg-slate-800 text-white font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-user-gear text-spemda-yellow"></i>
+                    <span class="hidden sm:inline">Dashboard</span> Guru
+                </button>
+
+                <!-- Share Link Button -->
+                <button onclick="shareWebsiteLink()" class="bg-spemda-yellow hover:bg-amber-400 text-spemda-navy font-bold text-xs sm:text-sm px-3.5 py-2.5 rounded-xl shadow transition flex items-center gap-1.5" title="Bagikan Link Pembelajaran">
+                    <i class="fa-solid fa-share-nodes text-base"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- STEP NAVIGATION TABS -->
+        <nav class="bg-slate-50 border-t border-slate-200 overflow-x-auto no-scrollbar py-2 px-4">
+            <div class="max-w-7xl mx-auto flex items-center justify-between min-w-max space-x-2">
+                <button id="nav-step-1" onclick="navigateToStep(1)" class="nav-tab active flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-spemda-blue text-white shadow-sm">
+                    <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                    <i class="fa-solid fa-book-open"></i> Eksplorasi Materi
+                </button>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+
+                <button id="nav-step-2" onclick="navigateToStep(2)" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">2</span>
+                    <i class="fa-solid fa-brain"></i> Pembelajaran Mendalam
+                </button>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+
+                <button id="nav-step-3" onclick="navigateToStep(3)" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">3</span>
+                    <i class="fa-solid fa-clipboard-list"></i> Pengalaman Belajar (LKM)
+                </button>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+
+                <button id="nav-step-4" onclick="navigateToStep(4)" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">4</span>
+                    <i class="fa-solid fa-pen-to-square"></i> Kuis Interaktif
+                </button>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+
+                <button id="nav-step-5" onclick="navigateToStep(5)" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">5</span>
+                    <i class="fa-solid fa-gamepad"></i> Game Edukatif
+                </button>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+
+                <button id="nav-step-6" onclick="navigateToStep(6)" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">6</span>
+                    <i class="fa-solid fa-heart-pulse"></i> Refleksi
+                </button>
+                <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+
+                <button id="nav-step-7" onclick="navigateToStep(7)" class="nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200">
+                    <span class="w-5 h-5 rounded-full bg-slate-200 flex items-center justify-center text-[10px]">7</span>
+                    <i class="fa-solid fa-award"></i> Hasil & Sertifikat
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN HERO & LEARNING IDENTITY BANNER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+        <div class="bg-gradient-to-r from-spemda-navy via-spemda-blue to-indigo-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8 relative overflow-hidden border-b-8 border-spemda-yellow float-anim">
+            <!-- Decorative Background Patterns -->
+            <div class="absolute -right-10 -bottom-10 opacity-15 text-white pointer-events-none">
+                <i class="fa-solid fa-landmark text-9xl"></i>
+            </div>
+            <div class="absolute right-1/3 -top-12 opacity-10 text-white pointer-events-none">
+                <i class="fa-solid fa-book-bookmark text-8xl"></i>
+            </div>
+
+            <div class="relative z-10 grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+                <div class="md:col-span-2 space-y-3">
+                    <div class="flex flex-wrap gap-2 items-center">
+                        <span class="bg-spemda-yellow text-spemda-navy font-bold text-xs px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-graduation-cap"></i> <span id="displayMapel">Pendidikan Pancasila</span>
+                        </span>
+                        <span class="bg-white/20 text-white font-semibold text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                            Kelas <span id="displayKelas">8 / Fase D</span>
+                        </span>
+                        <span class="bg-emerald-500/80 text-white font-semibold text-xs px-3 py-1 rounded-full backdrop-blur-sm">
+                            <i class="fa-solid fa-school mr-1"></i> <span id="displaySekolah">SMP Muhammadiyah 2 Surabaya</span>
+                        </span>
+                    </div>
+
+                    <h2 id="displayMateriJudul" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight">
+                        Mengidentifikasi Pengertian, Fungsi, dan Tujuan Peraturan Perundang-Undangan
+                    </h2>
+
+                    <div class="flex items-center gap-3 pt-2 border-t border-white/20 text-xs sm:text-sm text-slate-200">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-spemda-orange text-white flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-user-tie"></i>
+                            </div>
+                            <div>
+                                <span class="text-slate-300 block text-[10px]">Guru Pengampu:</span>
+                                <strong id="displayGuruNama" class="text-spemda-yellow text-sm">Drs. BUNYANI</strong>
+                            </div>
+                        </div>
+                        <div class="h-6 w-px bg-white/20 mx-2"></div>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-spemda-yellow text-lg"></i>
+                            <span>Kurikulum Merdeka • Learning Deeply</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Objective Dynamic Card -->
+                <div class="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/20 text-xs space-y-2">
+                    <div class="flex items-center justify-between text-spemda-yellow font-bold border-b border-white/10 pb-2">
+                        <span><i class="fa-solid fa-bullseye mr-1"></i> TUJUAN PEMBELAJARAN</span>
+                        <i class="fa-solid fa-star text-xs"></i>
+                    </div>
+                    <ul id="displayTujuanList" class="space-y-1.5 text-slate-100 leading-relaxed list-disc list-inside">
+                        <li>Murid mampu menguraikan pengertian peraturan perundang-undangan secara tepat.</li>
+                        <li>Murid mampu menganalisis fungsi internal dan eksternal peraturan dalam kehidupan berbangsa.</li>
+                        <li>Murid mampu mengevaluasi pentingnya kepatuhan terhadap hukum untuk ketertiban masyarakat.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 1: EKSPLORASI MATERI -->
+        <section id="step-1" class="step-content space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-blue text-white flex items-center justify-center text-lg shadow">1</span>
+                    Eksplorasi Materi Interaktif
+                </h3>
+                <span class="text-xs bg-blue-100 text-spemda-blue font-bold px-3 py-1 rounded-full">Langkah 1 dari 7</span>
+            </div>
+
+            <!-- Video & Multimedia Card -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+                <!-- Video Container -->
+                <div class="lg:col-span-7 bg-white p-5 rounded-3xl shadow-md border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="font-bold text-lg text-spemda-navy flex items-center gap-2">
+                                <i class="fa-solid fa-circle-play text-spemda-orange text-xl"></i>
+                                Video Audio-Visual Pembelajaran
+                            </h4>
+                            <span class="text-xs bg-red-100 text-red-600 font-bold px-2.5 py-0.5 rounded-full"><i class="fa-brands fa-youtube mr-1"></i>Simulasi Video</span>
+                        </div>
+                        <div class="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 shadow-inner group">
+                            <!-- Dynamic Video Frame / Fallback Embed -->
+                            <iframe id="videoPlayer" class="w-full h-full" src="https://www.youtube.com/embed/dQw4w9WgXcQ?rel=0" title="Video Peraturan Perundang-undangan" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        </div>
+                    </div>
+                    <div class="mt-3 bg-sky-50 p-3 rounded-xl border border-sky-100 flex items-center gap-3 text-xs text-sky-900">
+                        <i class="fa-solid fa-circle-info text-spemda-sky text-lg"></i>
+                        <span><strong>Petunjuk:</strong> Tonton video dengan saksama untuk memahami konsep hierarki norma hukum di Indonesia!</span>
+                    </div>
+                </div>
+
+                <!-- Interactive Flashcard Concept Summary -->
+                <div class="lg:col-span-5 bg-gradient-to-br from-amber-50 to-orange-50 p-6 rounded-3xl shadow-md border border-amber-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-lg text-amber-900 flex items-center gap-2">
+                                <i class="fa-solid fa-box-archive text-spemda-yellow text-xl"></i>
+                                Konsep Inti (Kartu Kilat)
+                            </h4>
+                            <span class="text-xs bg-amber-200 text-amber-900 font-bold px-2 py-0.5 rounded-full">Klik Kartu</span>
+                        </div>
+
+                        <!-- Flashcard Interactive -->
+                        <div id="flashcard" onclick="flipFlashcard()" class="cursor-pointer bg-white p-6 rounded-2xl border-2 border-amber-300 shadow-sm hover:shadow-md transition text-center min-h-[220px] flex flex-col justify-center items-center relative group">
+                            <span id="flashcardBadge" class="absolute top-3 right-3 text-[10px] font-extrabold uppercase tracking-wider bg-amber-100 text-amber-800 px-2 py-0.5 rounded-md">Definisi</span>
+                            <i id="flashcardIcon" class="fa-solid fa-book text-4xl text-spemda-orange mb-3 transition transform group-hover:scale-110"></i>
+                            <h5 id="flashcardTitle" class="text-lg font-bold text-spemda-navy mb-2">Apa itu Peraturan Perundang-Undangan?</h5>
+                            <p id="flashcardDesc" class="text-xs text-slate-600 leading-relaxed">
+                                Peraturan tertulis yang memuat norma hukum yang mengikat secara umum dan dibentuk atau ditetapkan oleh lembaga negara atau pejabat yang berwenang melalui prosedur yang ditetapkan.
+                            </p>
+                            <span class="text-[11px] text-spemda-blue font-semibold mt-4 flex items-center gap-1">
+                                <i class="fa-solid fa-rotate"></i> Klik untuk mengganti materi
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3 gap-2 mt-4 text-center">
+                        <button onclick="setFlashcard(0)" class="py-2 bg-white hover:bg-amber-100 border border-amber-200 rounded-xl text-xs font-bold text-slate-700">1. Pengertian</button>
+                        <button onclick="setFlashcard(1)" class="py-2 bg-white hover:bg-amber-100 border border-amber-200 rounded-xl text-xs font-bold text-slate-700">2. Fungsi</button>
+                        <button onclick="setFlashcard(2)" class="py-2 bg-white hover:bg-amber-100 border border-amber-200 rounded-xl text-xs font-bold text-slate-700">3. Tujuan</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detailed Content Accordion Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Card 1: Pengertian -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-t-8 border-spemda-sky hover:shadow-lg transition">
+                    <div class="w-12 h-12 rounded-2xl bg-sky-100 text-spemda-sky flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-scale-unbalanced"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-spemda-navy mb-2">1. Pengertian Hukum & Peraturan</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Sesuai UU No. 12 Tahun 2011, peraturan dibuat oleh lembaga resmi seperti DPR dan Pemerintah untuk menciptakan ketertiban umum.
+                    </p>
+                    <div class="bg-sky-50 rounded-xl p-3 border border-sky-100 text-xs text-sky-900 space-y-1">
+                        <strong class="block text-spemda-sky">Ciri Utama:</strong>
+                        <ul class="list-disc list-inside space-y-0.5 text-[11px]">
+                            <li>Berbentuk tertulis</li>
+                            <li>Mengikat seluruh warga negara</li>
+                            <li>Dibuat pejabat berwenang</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 2: Fungsi -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-t-8 border-spemda-green hover:shadow-lg transition">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-spemda-green flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-gear"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-spemda-navy mb-2">2. Fungsi Utama Peraturan</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Memiliki fungsi internal (pengaturan hukum) dan eksternal (mewujudkan keadilan & kesejahteraan masyarakat).
+                    </p>
+                    <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100 text-xs text-emerald-900 space-y-1">
+                        <strong class="block text-spemda-green">Fungsi Penting:</strong>
+                        <ul class="list-disc list-inside space-y-0.5 text-[11px]">
+                            <li>Pengayoman hak asasi manusia</li>
+                            <li>Menciptakan Kepastian Hukum</li>
+                            <li>Penyelesaian konflik warga</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Card 3: Tujuan -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-t-8 border-spemda-orange hover:shadow-lg transition">
+                    <div class="w-12 h-12 rounded-2xl bg-orange-100 text-spemda-orange flex items-center justify-center text-xl font-bold mb-4">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <h4 class="font-bold text-xl text-spemda-navy mb-2">3. Tujuan Peraturan</h4>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                        Menjamin keselamatan, keadilan sosial, keteraturan, dan kesejahteraan bagi seluruh rakyat Indonesia.
+                    </p>
+                    <div class="bg-orange-50 rounded-xl p-3 border border-orange-100 text-xs text-orange-900 space-y-1">
+                        <strong class="block text-spemda-orange">Tiga Nilai Hukum Gustav Radbruch:</strong>
+                        <ul class="list-disc list-inside space-y-0.5 text-[11px]">
+                            <li>Keadilan (Gerechtigkeit)</li>
+                            <li>Kemanfaatan (Zweckmassigkeit)</li>
+                            <li>Kepastian Hukum (Rechtssicherheit)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hierarchy Visual Structure -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-md border border-slate-200">
+                <div class="text-center max-w-2xl mx-auto mb-6">
+                    <span class="bg-purple-100 text-spemda-purple text-xs font-bold px-3 py-1 rounded-full uppercase">Hierarki UU No. 12 Tahun 2011</span>
+                    <h4 class="text-2xl font-bold text-spemda-navy mt-1">Tata Urutan Peraturan Perundang-Undangan di Indonesia</h4>
+                    <p class="text-xs text-slate-500 mt-1">Peraturan tingkat bawah tidak boleh bertentangan dengan peraturan tingkat di atasnya (Stufenbau Theory).</p>
+                </div>
+
+                <div class="max-w-3xl mx-auto space-y-2">
+                    <div class="p-3 bg-indigo-900 text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-amber-400">
+                        <span>1. UUD Negara Republik Indonesia Tahun 1945</span>
+                        <span class="text-[10px] bg-amber-400 text-slate-900 font-black px-2 py-0.5 rounded-full">Tingkat Tertinggi</span>
+                    </div>
+                    <div class="p-3 bg-indigo-800 text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-indigo-950">
+                        <span>2. Ketetapan Majelis Permusyawaratan Rakyat (TAP MPR)</span>
+                        <span class="text-[10px] bg-indigo-600 text-white px-2 py-0.5 rounded-full">Tingkat 2</span>
+                    </div>
+                    <div class="p-3 bg-blue-700 text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-blue-900">
+                        <span>3. Undang-Undang (UU) / Perpu</span>
+                        <span class="text-[10px] bg-blue-500 text-white px-2 py-0.5 rounded-full">Tingkat 3</span>
+                    </div>
+                    <div class="p-3 bg-spemda-sky text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-cyan-700">
+                        <span>4. Peraturan Pemerintah (PP)</span>
+                        <span class="text-[10px] bg-cyan-600 text-white px-2 py-0.5 rounded-full">Tingkat 4</span>
+                    </div>
+                    <div class="p-3 bg-emerald-600 text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-emerald-800">
+                        <span>5. Peraturan Presiden (PERPRES)</span>
+                        <span class="text-[10px] bg-emerald-800 text-white px-2 py-0.5 rounded-full">Tingkat 5</span>
+                    </div>
+                    <div class="p-3 bg-teal-500 text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-teal-700">
+                        <span>6. Peraturan Daerah Provinsi (PERDA Prov)</span>
+                        <span class="text-[10px] bg-teal-700 text-white px-2 py-0.5 rounded-full">Tingkat 6</span>
+                    </div>
+                    <div class="p-3 bg-spemda-orange text-white rounded-2xl text-center font-bold text-xs sm:text-sm shadow flex items-center justify-between px-6 border-b-4 border-orange-700">
+                        <span>7. Peraturan Daerah Kabupaten / Kota (PERDA Kab/Kota)</span>
+                        <span class="text-[10px] bg-orange-700 text-white px-2 py-0.5 rounded-full">Tingkat Daerah</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 2: PRINSIP PEMBELAJARAN MENDALAM -->
+        <section id="step-2" class="step-content hidden space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-purple text-white flex items-center justify-center text-lg shadow">2</span>
+                    Prinsip Pembelajaran Mendalam (Deep Learning)
+                </h3>
+                <span class="text-xs bg-purple-100 text-spemda-purple font-bold px-3 py-1 rounded-full">Langkah 2 dari 7</span>
+            </div>
+
+            <!-- 4 Pillar Deep Learning Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Pillar 1: Pemahaman Konseptual -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-spemda-blue space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-100 text-spemda-blue flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-lightbulb"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-spemda-navy">1. Pemahaman Konseptual</h4>
+                            <span class="text-[11px] text-slate-500">Mengkaitkan Aturan dengan Ketertiban</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Memahami bahwa hukum diciptakan bukan untuk mengekang warga, melainkan untuk memberikan perlindungan keselamatan bersama dan kepastian sosial.
+                    </p>
+                    <div class="bg-blue-50 p-3 rounded-xl text-xs text-blue-900 border border-blue-100">
+                        <strong>Pertanyaan Pemantik:</strong> "Apa yang terjadi pada lalu lintas kota Surabaya jika tidak ada lampu lalu lintas dan marka jalan?"
+                    </div>
+                </div>
+
+                <!-- Pillar 2: Berpikir Kritis -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-spemda-orange space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-orange-100 text-spemda-orange flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-brain"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-spemda-navy">2. Berpikir Kritis (HOTS)</h4>
+                            <span class="text-[11px] text-slate-500">Analisis Studi Kasus Hukum</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Murid dilatih menganalisis keselarasan Peraturan Daerah (Perda) dengan UUD 1945 agar tidak ada aturan daerah yang diskriminatif.
+                    </p>
+                    <div class="bg-orange-50 p-3 rounded-xl text-xs text-orange-900 border border-orange-100">
+                        <strong>Simulasi Kritis:</strong> "Jika sebuah Perda melarang siswa belajar di malam hari, apakah Perda tersebut sesuai dengan UUD 1945 Pasal 31 tentang hak mendapat pendidikan?"
+                    </div>
+                </div>
+
+                <!-- Pillar 3: Literasi Saintifik & Kewarganegaraan -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-spemda-green space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-100 text-spemda-green flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-spemda-navy">3. Literasi Kewarganegaraan</h4>
+                            <span class="text-[11px] text-slate-500">Hak dan Kewajiban Subjek Hukum</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Mengembangkan kebiasaan membaca teks perundang-undangan secara kritis, memahami pasal-pasal penting, dan aktif berpartisipasi sebagai warga negara taat hukum.
+                    </p>
+                    <div class="bg-emerald-50 p-3 rounded-xl text-xs text-emerald-900 border border-emerald-100">
+                        <strong>Aksi Nyata:</strong> Menghormati tata tertib sekolah di SMP Muhammadiyah 2 Surabaya sebagai bentuk kepatuhan hukum sejak dini.
+                    </div>
+                </div>
+
+                <!-- Pillar 4: Numerasi & Data -->
+                <div class="bg-white rounded-3xl p-6 shadow-md border-l-8 border-spemda-purple space-y-3">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-100 text-spemda-purple flex items-center justify-center font-bold text-lg">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg text-spemda-navy">4. Numerasi Hukum</h4>
+                            <span class="text-[11px] text-slate-500">Membaca Data Tingkat Kepatuhan</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed">
+                        Menganalisis grafik dan persentase angka pelanggaran lalu lintas atau tata tertib untuk merumuskan solusi pencegahan yang efektif.
+                    </p>
+                    <div class="bg-purple-50 p-3 rounded-xl text-xs text-purple-900 border border-purple-100">
+                        <strong>Data Numerasi:</strong> 85% kecelakaan diawali dari pelanggaran rambu lalu lintas. Mengapa angka kepatuhan mempengaruhi tingkat keselamatan jiwa?
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 3: PENGALAMAN BELAJAR & LKM DIGITAL -->
+        <section id="step-3" class="step-content hidden space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-green text-white flex items-center justify-center text-lg shadow">3</span>
+                    Pengalaman Belajar: Lembar Kerja Murid (LKM Digital)
+                </h3>
+                <span class="text-xs bg-emerald-100 text-spemda-green font-bold px-3 py-1 rounded-full">Langkah 3 dari 7</span>
+            </div>
+
+            <!-- Digital Worksheet Form -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-lg border border-slate-200 space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+                    <div>
+                        <h4 class="text-xl font-bold text-spemda-navy">LKM Digital: Misi Detektif Hukum SPEMDA</h4>
+                        <p class="text-xs text-slate-500">Isi jawaban kamu di bawah ini. Jawaban akan tersimpan secara otomatis!</p>
+                    </div>
+                    <span class="text-xs bg-spemda-yellow text-spemda-navy font-bold px-3 py-1 rounded-full">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> Auto-Save Live
+                    </span>
+                </div>
+
+                <!-- Identitas Siswa Form -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Nama Lengkap Murid *</label>
+                        <input type="text" id="lkmNamaSiswa" placeholder="Ketik nama lengkapmu..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-spemda-blue outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Kelas & Nomor Absen *</label>
+                        <input type="text" id="lkmKelasSiswa" placeholder="Contoh: 8-A / Absen 12" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-spemda-blue outline-none">
+                    </div>
+                </div>
+
+                <!-- LKPD Case Studies -->
+                <div class="space-y-6">
+                    <!-- Soal 1 -->
+                    <div class="bg-blue-50/60 p-5 rounded-2xl border border-blue-100 space-y-2">
+                        <label class="block font-bold text-sm text-spemda-navy">
+                            1. Studi Kasus Sekolah: Mengapa Tata Tertib SMP Muhammadiyah 2 Surabaya Sangat Diperlukan?
+                        </label>
+                        <p class="text-xs text-slate-600">
+                            Jelaskan pendapatmu mengenai tujuan pembuatan tata tertib sekolah dan dampaknya terhadap kenyamanan belajar siswa di kelas!
+                        </p>
+                        <textarea id="lkmSoal1" rows="3" placeholder="Tuliskan analisis dan alasanmu di sini..." class="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-spemda-blue outline-none"></textarea>
+                    </div>
+
+                    <!-- Soal 2 -->
+                    <div class="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-100 space-y-2">
+                        <label class="block font-bold text-sm text-spemda-navy">
+                            2. Analisis Kasus: Pertentangan Peraturan Daerah dengan UU
+                        </label>
+                        <p class="text-xs text-slate-600">
+                            Apabila sebuah Peraturan Daerah (Perda) bertentangan dengan Undang-Undang di atasnya, aturan mana yang harus berlaku? Berikan alasan berdasarkan asas hukum hierarki!
+                        </p>
+                        <textarea id="lkmSoal2" rows="3" placeholder="Tuliskan jawaban berdasarkan hierarki perundang-undangan..." class="w-full p-3 rounded-xl border border-slate-300 text-xs focus:ring-2 focus:ring-spemda-blue outline-none"></textarea>
+                    </div>
+                </div>
+
+                <!-- Submit Button LKM -->
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <span id="lkmStatusSave" class="text-xs text-emerald-600 font-bold hidden">
+                        <i class="fa-solid fa-check-circle mr-1"></i> Lembar Kerja Tersimpan!
+                    </span>
+                    <button onclick="saveLKM()" class="ml-auto bg-spemda-green hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Simpan Jawaban LKM
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 4: KUIS INTERAKTIF (TKA SANGAT SERU) -->
+        <section id="step-4" class="step-content hidden space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-yellow text-spemda-navy flex items-center justify-center text-lg shadow">4</span>
+                    Kuis Interaktif & Tes Kemampuan Akademik (TKA)
+                </h3>
+                <span class="text-xs bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full">Nilai Min: 75 untuk Sertifikat</span>
+            </div>
+
+            <!-- Quiz Container -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 max-w-4xl mx-auto">
+                <div id="quizIntro" class="text-center py-6 space-y-4">
+                    <div class="w-20 h-20 bg-amber-100 text-spemda-yellow rounded-3xl mx-auto flex items-center justify-center text-4xl shadow-md">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <h4 class="text-2xl font-bold text-spemda-navy">Siap Menguji Pemahamanmu?</h4>
+                    <p class="text-xs sm:text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                        Soal-soal kuis disusun berdasarkan standar HOTS & Tes Kemampuan Akademik (TKA) Kurikulum Merdeka. Skor otomatis & pembahasan lengkap akan muncul langsung setelah selesai!
+                    </p>
+                    <button onclick="startQuiz()" class="bg-spemda-blue hover:bg-indigo-800 text-white font-bold text-sm px-8 py-3.5 rounded-2xl shadow-lg bounce-hover flex items-center gap-2 mx-auto">
+                        <i class="fa-solid fa-play"></i> Mulai Kuis Sekarang
+                    </button>
+                </div>
+
+                <!-- Active Quiz Board -->
+                <div id="quizBoard" class="hidden space-y-6">
+                    <!-- Quiz Header Info -->
+                    <div class="flex items-center justify-between bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <span id="quizQuestionNum" class="text-xs font-extrabold text-spemda-blue bg-blue-100 px-3 py-1 rounded-full">Soal 1 dari 5</span>
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-clock text-spemda-orange text-sm"></i>
+                            <span id="quizTimer" class="text-xs font-bold text-slate-700">Waktu: 00:00</span>
+                        </div>
+                    </div>
+
+                    <!-- Question Text -->
+                    <div class="bg-sky-50/50 p-5 rounded-2xl border border-sky-100">
+                        <h5 id="quizQuestionText" class="font-bold text-slate-800 text-sm sm:text-base leading-relaxed">
+                            Loading pertanyaan...
+                        </h5>
+                    </div>
+
+                    <!-- Multiple Choice Options -->
+                    <div id="quizOptions" class="grid grid-cols-1 gap-3">
+                        <!-- Rendered dynamically -->
+                    </div>
+
+                    <!-- Navigation inside quiz -->
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                        <button id="btnPrevQuestion" onclick="prevQuestion()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2.5 rounded-xl disabled:opacity-40">
+                            <i class="fa-solid fa-arrow-left mr-1"></i> Sebelumnya
+                        </button>
+                        <button id="btnNextQuestion" onclick="nextQuestion()" class="bg-spemda-navy hover:bg-slate-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow">
+                            Selanjutnya <i class="fa-solid fa-arrow-right ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quiz Results & Discussion Panel -->
+                <div id="quizResultPanel" class="hidden space-y-6 py-4">
+                    <div class="text-center space-y-3">
+                        <div id="quizScoreBadge" class="w-24 h-24 rounded-full mx-auto flex flex-col items-center justify-center font-extrabold text-3xl shadow-lg border-4 text-white bg-spemda-green border-emerald-300">
+                            <span id="quizScoreValue">80</span>
+                            <span class="text-[10px] font-normal uppercase">Skor Kamu</span>
+                        </div>
+                        <h4 id="quizScoreTitle" class="text-2xl font-bold text-spemda-navy">Luar Biasa! Kamu Lulus!</h4>
+                        <p id="quizScoreDesc" class="text-xs text-slate-600 max-w-md mx-auto">
+                            Selamat! Pemahamanmu mengenai materi Peraturan Perundang-undangan sangat baik.
+                        </p>
+                    </div>
+
+                    <!-- Answers Breakdown -->
+                    <div class="space-y-4">
+                        <h5 class="font-bold text-sm text-spemda-navy border-b pb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-spemda-blue"></i> Pembahasan Lengkap Soal:
+                        </h5>
+                        <div id="quizDiscussionList" class="space-y-3 max-h-80 overflow-y-auto pr-2">
+                            <!-- Rendered dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-slate-100">
+                        <button onclick="restartQuiz()" class="bg-slate-200 hover:bg-slate-300 text-slate-800 font-bold text-xs px-5 py-2.5 rounded-xl">
+                            <i class="fa-solid fa-rotate-left mr-1"></i> Ulangi Kuis
+                        </button>
+                        <button onclick="navigateToStep(5)" class="bg-spemda-green hover:bg-emerald-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow">
+                            Lanjut ke Game Edukatif <i class="fa-solid fa-gamepad ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 5: GAME EDUKATIF -->
+        <section id="step-5" class="step-content hidden space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-orange text-white flex items-center justify-center text-lg shadow">5</span>
+                    Game Edukatif: "Susun Pyramida Hierarki Hukum"
+                </h3>
+                <span class="text-xs bg-orange-100 text-spemda-orange font-bold px-3 py-1 rounded-full">Langkah 5 dari 7</span>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 space-y-6">
+                <div class="text-center max-w-xl mx-auto space-y-2">
+                    <h4 class="text-xl font-bold text-spemda-navy">Tantangan Detektif Hukum</h4>
+                    <p class="text-xs text-slate-600">
+                        Klik nama peraturan di bawah ini secara berurutan dari **tingkat tertinggi (1)** sampai **tingkat terendah (7)** sesuai UU No. 12 Tahun 2011!
+                    </p>
+                </div>
+
+                <!-- Game Stats Bar -->
+                <div class="flex items-center justify-around bg-orange-50 p-3 rounded-2xl border border-orange-200 text-xs font-bold text-orange-900">
+                    <div><i class="fa-solid fa-star text-spemda-yellow mr-1"></i> Skor Game: <span id="gameScoreText" class="text-sm">0</span></div>
+                    <div><i class="fa-solid fa-bullseye text-spemda-orange mr-1"></i> Langkah: <span id="gameStepText" class="text-sm">0 / 7</span></div>
+                </div>
+
+                <!-- Game Options Pool -->
+                <div>
+                    <span class="block text-xs font-bold text-slate-500 mb-2 text-center">PILIHAN PERATURAN (Klik untuk Memilih):</span>
+                    <div id="gameOptionsContainer" class="flex flex-wrap gap-2 justify-center">
+                        <!-- Dynamic Buttons -->
+                    </div>
+                </div>
+
+                <!-- Target Hierarchy Slots -->
+                <div class="max-w-md mx-auto space-y-2 border-t border-slate-100 pt-4">
+                    <span class="block text-xs font-bold text-slate-500 mb-2 text-center">SUSUNAN HIERARKI KAMU:</span>
+                    <div id="gameSlot1" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">1. Tingkat Tertinggi</div>
+                    <div id="gameSlot2" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">2. Tingkat Ke-2</div>
+                    <div id="gameSlot3" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">3. Tingkat Ke-3</div>
+                    <div id="gameSlot4" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">4. Tingkat Ke-4</div>
+                    <div id="gameSlot5" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">5. Tingkat Ke-5</div>
+                    <div id="gameSlot6" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">6. Tingkat Ke-6</div>
+                    <div id="gameSlot7" class="p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500">7. Tingkat Terendah</div>
+                </div>
+
+                <!-- Game Control Buttons -->
+                <div class="flex items-center justify-center gap-3">
+                    <button onclick="resetGame()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs px-4 py-2.5 rounded-xl">
+                        <i class="fa-solid fa-rotate mr-1"></i> Reset Game
+                    </button>
+                    <button onclick="checkGameResult()" class="bg-spemda-orange hover:bg-orange-600 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow">
+                        <i class="fa-solid fa-check-double mr-1"></i> Cek Jawaban Game
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 6: REFLEKSI MURID -->
+        <section id="step-6" class="step-content hidden space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-pink text-white flex items-center justify-center text-lg shadow">6</span>
+                    Refleksi Belajar Murid
+                </h3>
+                <span class="text-xs bg-pink-100 text-spemda-pink font-bold px-3 py-1 rounded-full">Langkah 6 dari 7</span>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-xl border border-slate-200 space-y-6 max-w-3xl mx-auto">
+                <div class="text-center space-y-2">
+                    <h4 class="text-xl font-bold text-spemda-navy">Bagaimana Perasaan & Pemahamanmu Hari Ini?</h4>
+                    <p class="text-xs text-slate-600">Pilihlah emotikon yang mewakili perasaanmu setelah mempelajari bab Peraturan Perundang-undangan!</p>
+                </div>
+
+                <!-- Mood Selector -->
+                <div class="flex justify-center gap-4 sm:gap-6">
+                    <button onclick="selectMood('Sangat Paham', this)" class="mood-btn p-4 bg-slate-50 hover:bg-emerald-50 border-2 border-slate-200 rounded-2xl text-center space-y-1 transition transform hover:scale-105">
+                        <span class="text-3xl">😃</span>
+                        <span class="block text-xs font-bold text-slate-700">Sangat Paham</span>
+                    </button>
+                    <button onclick="selectMood('Cukup Paham', this)" class="mood-btn p-4 bg-slate-50 hover:bg-sky-50 border-2 border-slate-200 rounded-2xl text-center space-y-1 transition transform hover:scale-105">
+                        <span class="text-3xl">🙂</span>
+                        <span class="block text-xs font-bold text-slate-700">Cukup Paham</span>
+                    </button>
+                    <button onclick="selectMood('Perlu Belajar Lagi', this)" class="mood-btn p-4 bg-slate-50 hover:bg-amber-50 border-2 border-slate-200 rounded-2xl text-center space-y-1 transition transform hover:scale-105">
+                        <span class="text-3xl">🤔</span>
+                        <span class="block text-xs font-bold text-slate-700">Perlu Diulang</span>
+                    </button>
+                </div>
+
+                <!-- Reflection Questions -->
+                <div class="space-y-4 pt-4 border-t border-slate-100">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Hal terpenting apa yang baru kamu pelajari hari ini?</label>
+                        <textarea id="refleksiHalBaru" rows="2" placeholder="Contoh: Saya baru tahu bahwa UUD 1945 adalah hukum tertinggi di Indonesia..." class="w-full p-3 rounded-xl border border-slate-300 text-xs outline-none focus:ring-2 focus:ring-spemda-blue"></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Komitmen apa yang ingin kamu lakukan untuk mematuhi peraturan di sekolah?</label>
+                        <textarea id="refleksiKomitmen" rows="2" placeholder="Contoh: Datang tepat waktu dan selalu memakai seragam lengkap..." class="w-full p-3 rounded-xl border border-slate-300 text-xs outline-none focus:ring-2 focus:ring-spemda-blue"></textarea>
+                    </div>
+                </div>
+
+                <div class="text-center pt-2">
+                    <button onclick="saveReflection()" class="bg-spemda-pink hover:bg-pink-600 text-white font-bold text-xs sm:text-sm px-8 py-3 rounded-xl shadow transition">
+                        <i class="fa-solid fa-heart mr-1"></i> Simpan Refleksi & Lihat Hasil
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- STEP 7: HASIL BELAJAR & SERTIFIKAT DIGITAL -->
+        <section id="step-7" class="step-content hidden space-y-8">
+            <div class="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+                <h3 class="text-2xl font-bold text-spemda-navy flex items-center gap-2">
+                    <span class="w-9 h-9 rounded-2xl bg-spemda-yellow text-spemda-navy flex items-center justify-center text-lg shadow">7</span>
+                    Halaman Hasil Belajar & Sertifikat
+                </h3>
+                <span class="text-xs bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full">Langkah Akhir</span>
+            </div>
+
+            <!-- Grade & Certificate Conditions -->
+            <div id="certEligiblePanel" class="space-y-8">
+                <!-- Certificate Wrapper for Print / View -->
+                <div id="certificateContainer" class="bg-white p-6 sm:p-10 rounded-3xl cert-border shadow-2xl max-w-4xl mx-auto text-center space-y-6 relative overflow-hidden bg-gradient-to-b from-white via-amber-50/20 to-white">
+                    <!-- School Branding & Certificate Header -->
+                    <div class="flex items-center justify-between border-b-2 border-amber-300 pb-4">
+                        <div class="text-left">
+                            <span class="text-[10px] font-extrabold uppercase tracking-widest text-spemda-blue block">SMP MUHAMMADIYAH 2 SURABAYA</span>
+                            <span class="text-xs font-bold text-slate-500">Ruang Belajar Digital SPEMDA K8</span>
+                        </div>
+                        <div class="w-12 h-12 rounded-2xl bg-spemda-navy flex items-center justify-center text-spemda-yellow font-bold text-xl shadow">
+                            <i class="fa-solid fa-award"></i>
+                        </div>
+                    </div>
+
+                    <!-- Certificate Title -->
+                    <div class="space-y-1">
+                        <h4 class="text-2xl sm:text-4xl font-extrabold text-spemda-navy tracking-tight uppercase">SERTIFIKAT KELULUSAN MODUL</h4>
+                        <p class="text-xs text-slate-500">Diberikan atas prestasi dan ketuntasan dalam memahami materi Pendidikan Pancasila</p>
+                    </div>
+
+                    <!-- Recipient Name -->
+                    <div class="py-4 space-y-2">
+                        <span class="text-xs text-slate-500 block">Sertifikat ini secara resmi diberikan kepada:</span>
+                        <h5 id="certStudentName" class="text-2xl sm:text-3xl font-extrabold text-spemda-blue underline decoration-spemda-yellow decoration-4">
+                            NAMA MURID
+                        </h5>
+                        <p id="certStudentClass" class="text-xs font-bold text-slate-600">Kelas 8 • SMP Muhammadiyah 2 Surabaya</p>
+                    </div>
+
+                    <!-- Subject & Score Summary -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 max-w-lg mx-auto grid grid-cols-2 gap-4 text-left text-xs">
+                        <div>
+                            <span class="text-slate-400 text-[10px] uppercase font-bold block">Mata Pelajaran:</span>
+                            <strong class="text-spemda-navy">Pendidikan Pancasila</strong>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 text-[10px] uppercase font-bold block">Nilai Kuis TKA:</span>
+                            <strong id="certScoreDisplay" class="text-emerald-600 font-extrabold text-sm">80 / 100 (TUNTAS)</strong>
+                        </div>
+                    </div>
+
+                    <!-- Signatures Section -->
+                    <div class="pt-6 flex items-center justify-between text-xs border-t border-slate-200">
+                        <div class="text-center">
+                            <span class="text-slate-400 text-[10px] block">Tanggal Kelulusan</span>
+                            <strong id="certDateDisplay" class="text-slate-700">15 Oktober 2026</strong>
+                        </div>
+                        <div class="text-center space-y-1">
+                            <span class="text-slate-400 text-[10px] block">Guru Pengampu</span>
+                            <div class="font-bold text-spemda-navy font-heading text-sm text-indigo-900 border-b border-slate-400 pb-0.5">Drs. BUNYANI</div>
+                            <span class="text-[10px] text-slate-500">NIP. SPEMDA-PP-08</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Print & Download Buttons -->
+                <div class="text-center flex justify-center gap-4">
+                    <button onclick="window.print()" class="bg-spemda-navy hover:bg-slate-800 text-white font-bold text-xs sm:text-sm px-6 py-3 rounded-xl shadow transition flex items-center gap-2">
+                        <i class="fa-solid fa-print"></i> Cetak Sertifikat
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ineligible Panel (if score < 75) -->
+            <div id="certIneligiblePanel" class="hidden bg-white p-8 rounded-3xl shadow-lg text-center max-w-xl mx-auto space-y-4 border border-amber-200">
+                <div class="w-16 h-16 bg-amber-100 text-spemda-orange rounded-full flex items-center justify-center text-3xl mx-auto">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h4 class="text-xl font-bold text-spemda-navy">Nilai Belum Mencapai Syarat Ketuntasan (75)</h4>
+                <p class="text-xs text-slate-600">
+                    Nilai Kuis kamu saat ini adalah <strong id="currentLowScore" class="text-red-500 text-sm">0</strong>. Yuk, pelajari kembali materi pada Langkah 1 dan ulangi Kuis pada Langkah 4 untuk mendapatkan Sertifikat!
+                </p>
+                <button onclick="navigateToStep(4)" class="bg-spemda-blue hover:bg-indigo-800 text-white font-bold text-xs px-6 py-3 rounded-xl shadow">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Ulangi Kuis Sekarang
+                </button>
+            </div>
+        </section>
+
+        <!-- BOTTOM NAVIGATION CONTROLS -->
+        <div class="mt-8 pt-4 border-t border-slate-200 flex items-center justify-between">
+            <button id="btnNavPrev" onclick="navigatePrev()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition flex items-center gap-2 disabled:opacity-30">
+                <i class="fa-solid fa-arrow-left"></i> Sebelumnya
+            </button>
+            <span id="currentStepIndicator" class="text-xs font-bold text-slate-500">Langkah 1 dari 7</span>
+            <button id="btnNavNext" onclick="navigateNext()" class="bg-spemda-blue hover:bg-indigo-800 text-white font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+                Selanjutnya <i class="fa-solid fa-arrow-right"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- TEACHER DASHBOARD MODAL -->
+    <div id="teacherModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-slate-200 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 rounded-2xl bg-spemda-navy text-spemda-yellow flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-sliders"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-lg text-spemda-navy">Dashboard Pengelolaan Guru</h4>
+                        <span class="text-[11px] text-slate-500">Kustomisasi Materi, Identitas, & Video</span>
+                    </div>
+                </div>
+                <button onclick="closeTeacherModal()" class="text-slate-400 hover:text-slate-600 text-xl font-bold">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Form Edit Identitas & Content -->
+            <div class="space-y-4 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Nama Guru Pengampu</label>
+                    <input type="text" id="editGuruNama" value="Drs. BUNYANI" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:ring-2 focus:ring-spemda-blue">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Mata Pelajaran</label>
+                        <input type="text" id="editMapel" value="Pendidikan Pancasila" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:ring-2 focus:ring-spemda-blue">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-700 mb-1">Kelas / Fase</label>
+                        <input type="text" id="editKelas" value="8 / Fase D" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:ring-2 focus:ring-spemda-blue">
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Judul Materi Pembelajaran</label>
+                    <input type="text" id="editMateriJudul" value="Mengidentifikasi Pengertian, Fungsi, dan Tujuan Peraturan Perundang-Undangan" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:ring-2 focus:ring-spemda-blue">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">URL / Embed Code Video YouTube</label>
+                    <input type="text" id="editVideoUrl" value="https://www.youtube.com/embed/dQw4w9WgXcQ" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 outline-none focus:ring-2 focus:ring-spemda-blue">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-700 mb-1">Tujuan Pembelajaran (Pisahkan dengan baris baru)</label>
+                    <textarea id="editTujuanList" rows="3" class="w-full p-3 rounded-xl border border-slate-300 outline-none focus:ring-2 focus:ring-spemda-blue">Murid mampu menguraikan pengertian peraturan perundang-undangan secara tepat.
+Murid mampu menganalisis fungsi internal dan eksternal peraturan dalam kehidupan berbangsa.
+Murid mampu mengevaluasi pentingnya kepatuhan terhadap hukum untuk ketertiban masyarakat.</textarea>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-3 border-t border-slate-200">
+                <button onclick="shareWebsiteLink()" class="bg-amber-100 text-amber-900 font-bold px-4 py-2 rounded-xl text-xs flex items-center gap-1.5">
+                    <i class="fa-solid fa-link"></i> Salin Link Murid
+                </button>
+                <button onclick="saveTeacherData()" class="bg-spemda-blue hover:bg-indigo-800 text-white font-bold px-6 py-2 rounded-xl text-xs shadow">
+                    <i class="fa-solid fa-check mr-1"></i> Simpan Perubahan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-spemda-navy text-slate-300 py-6 border-t-4 border-spemda-yellow mt-12 text-xs text-center">
+        <div class="max-w-7xl mx-auto px-4 space-y-2">
+            <p class="font-bold text-white">Ruang Belajar SPEMDA K8 • Pendidikan Pancasila SMP Muhammadiyah 2 Surabaya</p>
+            <p class="text-slate-400">Dirancang khusus dengan pendekatan Pembelajaran Mendalam & Kurikulum Merdeka oleh Drs. BUNYANI</p>
+            <p class="text-[10px] text-slate-500">© 2026 SPEMDA Surabaya. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <script>
+        // GLOBAL STATE & DATA
+        let currentStep = 1;
+        let userQuizScore = 0;
+        let currentQuestionIdx = 0;
+        let selectedAnswers = {};
+        let flashcardIdx = 0;
+        let selectedMoodValue = "Sangat Paham";
+
+        // FLASHCARD DATA
+        const flashcardItems = [
+            {
+                badge: "Definisi",
+                title: "Apa itu Peraturan Perundang-Undangan?",
+                desc: "Peraturan tertulis yang memuat norma hukum yang mengikat secara umum dan dibentuk atau ditetapkan oleh lembaga negara atau pejabat yang berwenang melalui prosedur yang ditetapkan.",
+                icon: "fa-book"
+            },
+            {
+                badge: "Fungsi Hukum",
+                title: "Fungsi Internal & Eksternal",
+                desc: "Fungsi internal meliputi pengarahan hukum dan penyelesaian sengketa. Fungsi eksternal meliputi pembaruan masyarakat, perubahan tata kehidupan, dan pencapaian keadilan sosial.",
+                icon: "fa-gear"
+            },
+            {
+                badge: "Tujuan Hukum",
+                title: "Tujuan Utama Peraturan",
+                desc: "Menciptakan kepastian hukum (Rechtssicherheit), keadilan sosial (Gerechtigkeit), dan kemanfaatan bagi seluruh warga negara (Zweckmassigkeit).",
+                icon: "fa-bullseye"
+            }
+        ];
+
+        // QUIZ QUESTIONS DATA (TKA / HOTS)
+        let quizQuestions = [
+            {
+                q: "1. Berdasarkan UU No. 12 Tahun 2011, peraturan tertulis yang memuat norma hukum yang mengikat secara umum dan dibentuk oleh lembaga resmi negara disebut...",
+                options: [
+                    "A. Kebiasaan masyarakat",
+                    "B. Peraturan Perundang-undangan",
+                    "C. Norma kesopanan",
+                    "D. Wewenang pribadi pejabat"
+                ],
+                answer: 1,
+                discussion: "Peraturan Perundang-undangan adalah aturan tertulis resmi yang dibentuk oleh lembaga negara seperti DPR/Pemerintah yang mengikat seluruh warga negara."
+            },
+            {
+                q: "2. Dalam tata urutan hierarki hukum di Indonesia, posisi tertinggi yang menjadi landasan utama seluruh peraturan perundang-undangan adalah...",
+                options: [
+                    "A. Peraturan Presiden (PERPRES)",
+                    "B. Peraturan Pemerintah (PP)",
+                    "C. UUD Negara Republik Indonesia Tahun 1945",
+                    "D. Peraturan Daerah Provinsi"
+                ],
+                answer: 2,
+                discussion: "UUD NRI 1945 merupakan hukum dasar tertulis tertinggi di Indonesia. Semua aturan di bawahnya tidak boleh bertentangan dengan UUD 1945."
+            },
+            {
+                q: "3. Apabila sebuah Peraturan Daerah (Perda) bertentangan dengan Undang-Undang di atasnya, tindakan hukum yang sesuai dengan prinsip hierarki perundang-undangan adalah...",
+                options: [
+                    "A. Perda tetap berlaku karena dibuat oleh daerah sendiri",
+                    "B. Perda batal demi hukum atau dapat diuji (judicial review)",
+                    "C. Undang-Undang yang mengalah pada Perda",
+                    "D. Kedua aturan dihapus bersamaan"
+                ],
+                answer: 1,
+                discussion: "Berdasarkan asas 'Lex superior derogat legi inferiori', aturan hukum yang lebih rendah tidak boleh bertentangan dengan aturan yang lebih tinggi."
+            },
+            {
+                q: "4. Salah satu tujuan utama diterapkannya tata tertib lalu lintas di jalan raya bagi seluruh warga adalah...",
+                options: [
+                    "A. Menambah pendapatan insidental negara",
+                    "B. Menjamin keselamatan, ketertiban, dan kepastian hukum bersama",
+                    "C. Membatasi hak warga untuk bepergian",
+                    "D. Memberikan hukuman kepada pengemudi"
+                ],
+                answer: 1,
+                discussion: "Tujuan utama hukum adalah menciptakan kepastian, keadilan, serta melindungi keselamatan jiwa dan ketertiban umum."
+            },
+            {
+                q: "5. Manakah contoh penerapan rasa tanggung jawab murid SMP Muhammadiyah 2 Surabaya terhadap peraturan sekolah?",
+                options: [
+                    "A. Datang terlambat tetapi memberi alasan menarik",
+                    "B. Menjaga kebersihan dan mematuhi tata tertib dengan penuh kesadaran",
+                    "C. Hanya mematuhi aturan saat dilihat oleh Guru Pengampu",
+                    "D. Acuh tak acuh terhadap jadwal piket kelas"
+                ],
+                answer: 1,
+                discussion: "Kepatuhan terhadap tata tertib sekolah dengan kesadaran diri adalah cerminan karakter taat hukum sejak dini."
+            }
+        ];
+
+        // GAME DATA
+        const correctHierarchyOrder = [
+            "UUD NRI Tahun 1945",
+            "Ketetapan MPR (TAP MPR)",
+            "Undang-Undang / Perpu",
+            "Peraturan Pemerintah (PP)",
+            "Peraturan Presiden (PERPRES)",
+            "Peraturan Daerah Provinsi",
+            "Peraturan Daerah Kab/Kota"
+        ];
+        let userGameChoices = [];
+
+        // INITIALIZATION
+        window.onload = function() {
+            renderFlashcard();
+            renderGameOptions();
+            updateStepView();
+        };
+
+        // NAVIGATION LOGIC
+        function navigateToStep(stepNum) {
+            currentStep = stepNum;
+            updateStepView();
+        }
+
+        function navigateNext() {
+            if (currentStep < 7) {
+                currentStep++;
+                updateStepView();
+            }
+        }
+
+        function navigatePrev() {
+            if (currentStep > 1) {
+                currentStep--;
+                updateStepView();
+            }
+        }
+
+        function updateStepView() {
+            // Hide all steps
+            document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
+            
+            // Show current step
+            const currentEl = document.getElementById(`step-${currentStep}`);
+            if (currentEl) currentEl.classList.remove('hidden');
+
+            // Update Tab Highlight
+            document.querySelectorAll('.nav-tab').forEach((tab, idx) => {
+                if (idx + 1 === currentStep) {
+                    tab.className = "nav-tab active flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition bg-spemda-blue text-white shadow-sm";
+                } else {
+                    tab.className = "nav-tab flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition text-slate-600 hover:bg-slate-200";
+                }
+            });
+
+            // Update Progress Bar
+            const progressPct = Math.round((currentStep / 7) * 100);
+            document.getElementById('overallProgressBar').style.width = `${progressPct}%`;
+            document.getElementById('overallProgressText').innerText = `${progressPct}%`;
+            document.getElementById('currentStepIndicator').innerText = `Langkah ${currentStep} dari 7`;
+
+            // Navigation button states
+            document.getElementById('btnNavPrev').disabled = (currentStep === 1);
+            if (currentStep === 7) {
+                document.getElementById('btnNavNext').style.display = 'none';
+                checkCertificateEligibility();
+            } else {
+                document.getElementById('btnNavNext').style.display = 'flex';
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // FLASHCARD LOGIC
+        function flipFlashcard() {
+            flashcardIdx = (flashcardIdx + 1) % flashcardItems.length;
+            renderFlashcard();
+        }
+
+        function setFlashcard(idx) {
+            flashcardIdx = idx;
+            renderFlashcard();
+        }
+
+        function renderFlashcard() {
+            const item = flashcardItems[flashcardIdx];
+            document.getElementById('flashcardBadge').innerText = item.badge;
+            document.getElementById('flashcardTitle').innerText = item.title;
+            document.getElementById('flashcardDesc').innerText = item.desc;
+            document.getElementById('flashcardIcon').className = `fa-solid ${item.icon} text-4xl text-spemda-orange mb-3 transition transform group-hover:scale-110`;
+        }
+
+        // LKM DIGITAL LOGIC
+        function saveLKM() {
+            const nama = document.getElementById('lkmNamaSiswa').value.trim();
+            const kelas = document.getElementById('lkmKelasSiswa').value.trim();
+
+            if (!nama || !kelas) {
+                alert("Harap lengkapi Nama dan Kelas terlebih dahulu!");
+                return;
+            }
+
+            document.getElementById('lkmStatusSave').classList.remove('hidden');
+            // Update Certificate Student Info
+            document.getElementById('certStudentName').innerText = nama.toUpperCase();
+            document.getElementById('certStudentClass').innerText = `Kelas ${kelas} • SMP Muhammadiyah 2 Surabaya`;
+
+            setTimeout(() => {
+                document.getElementById('lkmStatusSave').classList.add('hidden');
+            }, 3000);
+        }
+
+        // QUIZ LOGIC
+        function startQuiz() {
+            document.getElementById('quizIntro').classList.add('hidden');
+            document.getElementById('quizBoard').classList.remove('hidden');
+            document.getElementById('quizResultPanel').classList.add('hidden');
+            currentQuestionIdx = 0;
+            selectedAnswers = {};
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const qData = quizQuestions[currentQuestionIdx];
+            document.getElementById('quizQuestionNum').innerText = `Soal ${currentQuestionIdx + 1} dari ${quizQuestions.length}`;
+            document.getElementById('quizQuestionText').innerText = qData.q;
+
+            const optsContainer = document.getElementById('quizOptions');
+            optsContainer.innerHTML = '';
+
+            qData.options.forEach((optText, optIdx) => {
+                const isSelected = selectedAnswers[currentQuestionIdx] === optIdx;
+                const optBtn = document.createElement('button');
+                optBtn.className = `w-full text-left p-3.5 rounded-xl border text-xs font-semibold transition flex items-center justify-between ${
+                    isSelected 
+                    ? 'bg-blue-100 border-spemda-blue text-spemda-navy font-bold' 
+                    : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
+                }`;
+                optBtn.onclick = () => selectQuizAnswer(optIdx);
+                optBtn.innerHTML = `
+                    <span>${optText}</span>
+                    <i class="fa-solid ${isSelected ? 'fa-circle-check text-spemda-blue text-base' : 'fa-circle text-slate-300'}"></i>
+                `;
+                optsContainer.appendChild(optBtn);
+            });
+
+            document.getElementById('btnPrevQuestion').disabled = (currentQuestionIdx === 0);
+            if (currentQuestionIdx === quizQuestions.length - 1) {
+                document.getElementById('btnNextQuestion').innerHTML = `Selesai & Cek Hasil <i class="fa-solid fa-check ml-1"></i>`;
+                document.getElementById('btnNextQuestion').className = "bg-spemda-green hover:bg-emerald-600 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow";
+            } else {
+                document.getElementById('btnNextQuestion').innerHTML = `Selanjutnya <i class="fa-solid fa-arrow-right ml-1"></i>`;
+                document.getElementById('btnNextQuestion').className = "bg-spemda-navy hover:bg-slate-800 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow";
+            }
+        }
+
+        function selectQuizAnswer(optIdx) {
+            selectedAnswers[currentQuestionIdx] = optIdx;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (selectedAnswers[currentQuestionIdx] === undefined) {
+                alert("Silakan pilih salah satu jawaban terlebih dahulu!");
+                return;
+            }
+
+            if (currentQuestionIdx < quizQuestions.length - 1) {
+                currentQuestionIdx++;
+                renderQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIdx > 0) {
+                currentQuestionIdx--;
+                renderQuestion();
+            }
+        }
+
+        function finishQuiz() {
+            let correctCount = 0;
+            quizQuestions.forEach((q, idx) => {
+                if (selectedAnswers[idx] === q.answer) {
+                    correctCount++;
+                }
+            });
+
+            userQuizScore = Math.round((correctCount / quizQuestions.length) * 100);
+
+            document.getElementById('quizBoard').classList.add('hidden');
+            document.getElementById('quizResultPanel').classList.remove('hidden');
+
+            document.getElementById('quizScoreValue').innerText = userQuizScore;
+            document.getElementById('certScoreDisplay').innerText = `${userQuizScore} / 100 (${userQuizScore >= 75 ? 'TUNTAS' : 'BELUM TUNTAS'})`;
+
+            if (userQuizScore >= 75) {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                document.getElementById('quizScoreBadge').className = "w-24 h-24 rounded-full mx-auto flex flex-col items-center justify-center font-extrabold text-3xl shadow-lg border-4 text-white bg-spemda-green border-emerald-300";
+                document.getElementById('quizScoreTitle').innerText = "Luar Biasa! Kamu Lulus!";
+                document.getElementById('quizScoreDesc').innerText = "Selamat! Pemahamanmu memenuhi kriteria ketuntasan (>= 75). Sertifikat kelulusan dapat kamu akses pada langkah 7!";
+            } else {
+                document.getElementById('quizScoreBadge').className = "w-24 h-24 rounded-full mx-auto flex flex-col items-center justify-center font-extrabold text-3xl shadow-lg border-4 text-white bg-spemda-orange border-orange-300";
+                document.getElementById('quizScoreTitle').innerText = "Ayo Coba Lagi!";
+                document.getElementById('quizScoreDesc').innerText = "Nilai kamu masih di bawah kriteria minimal (75). Pelajari kembali pembahasan di bawah ini dan ulangi kuis!";
+            }
+
+            // Render Discussion List
+            const discussionContainer = document.getElementById('quizDiscussionList');
+            discussionContainer.innerHTML = '';
+
+            quizQuestions.forEach((q, idx) => {
+                const isCorrect = selectedAnswers[idx] === q.answer;
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border text-xs space-y-1.5 ${isCorrect ? 'bg-emerald-50/70 border-emerald-200' : 'bg-rose-50/70 border-rose-200'}`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between font-bold">
+                        <span class="text-slate-800">${q.q}</span>
+                        <span class="${isCorrect ? 'text-emerald-700 bg-emerald-200' : 'text-rose-700 bg-rose-200'} px-2 py-0.5 rounded-md text-[10px]">
+                            ${isCorrect ? 'Jawaban Benar' : 'Jawaban Salah'}
+                        </span>
+                    </div>
+                    <p class="text-slate-600"><strong>Jawaban Kamu:</strong> ${q.options[selectedAnswers[idx]]}</p>
+                    <p class="text-slate-700"><strong>Kunci Jawaban:</strong> ${q.options[q.answer]}</p>
+                    <div class="bg-white/80 p-2 rounded-xl text-[11px] text-slate-600 border border-slate-200 mt-1">
+                        <i class="fa-solid fa-circle-info text-spemda-blue mr-1"></i> <strong>Pembahasan:</strong> ${q.discussion}
+                    </div>
+                `;
+                discussionContainer.appendChild(card);
+            });
+        }
+
+        function restartQuiz() {
+            startQuiz();
+        }
+
+        // GAME LOGIC
+        function renderGameOptions() {
+            const container = document.getElementById('gameOptionsContainer');
+            container.innerHTML = '';
+
+            // Shuffle array
+            const shuffled = [...correctHierarchyOrder].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(item => {
+                const btn = document.createElement('button');
+                btn.className = "bg-orange-100 hover:bg-orange-200 text-orange-900 border border-orange-300 font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm";
+                btn.innerText = item;
+                btn.onclick = () => selectGameItem(item, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function selectGameItem(itemText, btnEl) {
+            if (userGameChoices.length >= 7) return;
+
+            userGameChoices.push(itemText);
+            btnEl.disabled = true;
+            btnEl.classList.add('opacity-30', 'cursor-not-allowed');
+
+            updateGameSlots();
+        }
+
+        function updateGameSlots() {
+            document.getElementById('gameStepText').innerText = `${userGameChoices.length} / 7`;
+
+            for (let i = 1; i <= 7; i++) {
+                const slot = document.getElementById(`gameSlot${i}`);
+                if (userGameChoices[i - 1]) {
+                    slot.innerText = `${i}. ${userGameChoices[i - 1]}`;
+                    slot.className = "p-2.5 bg-spemda-navy text-spemda-yellow rounded-xl text-xs text-center font-bold shadow";
+                } else {
+                    slot.innerText = `${i}. ${i === 1 ? 'Tingkat Tertinggi' : i === 7 ? 'Tingkat Terendah' : 'Tingkat Ke-' + i}`;
+                    slot.className = "p-2.5 bg-slate-100 border-2 border-dashed border-slate-300 rounded-xl text-xs text-center font-bold text-slate-500";
+                }
+            }
+        }
+
+        function resetGame() {
+            userGameChoices = [];
+            document.getElementById('gameScoreText').innerText = '0';
+            renderGameOptions();
+            updateGameSlots();
+        }
+
+        function checkGameResult() {
+            if (userGameChoices.length < 7) {
+                alert("Lengkapi susunan 7 hierarki hukum terlebih dahulu!");
+                return;
+            }
+
+            let correct = 0;
+            userGameChoices.forEach((item, idx) => {
+                if (item === correctHierarchyOrder[idx]) correct++;
+            });
+
+            const score = Math.round((correct / 7) * 100);
+            document.getElementById('gameScoreText').innerText = score;
+
+            if (score === 100) {
+                confetti({ particleCount: 80, spread: 60 });
+                alert("Sempurna! Kamu berhasil menyusun seluruh hierarki perundang-undangan dengan benar!");
+            } else {
+                alert(`Kamu berhasil menjawab ${correct} dari 7 aturan secara tepat. Klik Reset Game untuk mencoba lagi!`);
+            }
+        }
+
+        // REFLECTION LOGIC
+        function selectMood(mood, btn) {
+            selectedMoodValue = mood;
+            document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('border-spemda-pink', 'bg-pink-100'));
+            btn.classList.add('border-spemda-pink', 'bg-pink-100');
+        }
+
+        function saveReflection() {
+            alert("Refleksi kamu berhasil disimpan! Meluncur ke halaman Hasil Belajar...");
+            navigateToStep(7);
+        }
+
+        // CERTIFICATE ELIGIBILITY CHECK
+        function checkCertificateEligibility() {
+            const namaInput = document.getElementById('lkmNamaSiswa').value.trim();
+            if (namaInput) {
+                document.getElementById('certStudentName').innerText = namaInput.toUpperCase();
+            }
+
+            // Set current date
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('certDateDisplay').innerText = new Date().toLocaleDateString('id-ID', options);
+
+            if (userQuizScore >= 75) {
+                document.getElementById('certEligiblePanel').classList.remove('hidden');
+                document.getElementById('certIneligiblePanel').classList.add('hidden');
+                confetti({ particleCount: 120, origin: { y: 0.5 } });
+            } else {
+                document.getElementById('certEligiblePanel').classList.add('hidden');
+                document.getElementById('certIneligiblePanel').classList.remove('hidden');
+                document.getElementById('currentLowScore').innerText = userQuizScore;
+            }
+        }
+
+        // TEACHER DASHBOARD LOGIC
+        function openTeacherModal() {
+            document.getElementById('teacherModal').classList.remove('hidden');
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacherModal').classList.add('hidden');
+        }
+
+        function saveTeacherData() {
+            const namaGuru = document.getElementById('editGuruNama').value;
+            const mapel = document.getElementById('editMapel').value;
+            const kelas = document.getElementById('editKelas').value;
+            const materiJudul = document.getElementById('editMateriJudul').value;
+            const videoUrl = document.getElementById('editVideoUrl').value;
+            const tujuanText = document.getElementById('editTujuanList').value;
+
+            document.getElementById('displayGuruNama').innerText = namaGuru;
+            document.getElementById('displayMapel').innerText = mapel;
+            document.getElementById('displayKelas').innerText = kelas;
+            document.getElementById('displayMateriJudul').innerText = materiJudul;
+            document.getElementById('videoPlayer').src = videoUrl;
+
+            // Update Tujuan Pembelajaran List
+            const tujuanArray = tujuanText.split('\n').filter(t => t.trim().length > 0);
+            const tujuanContainer = document.getElementById('displayTujuanList');
+            tujuanContainer.innerHTML = '';
+            tujuanArray.forEach(item => {
+                const li = document.createElement('li');
+                li.innerText = item;
+                tujuanContainer.appendChild(li);
+            });
+
+            closeTeacherModal();
+            alert("Data pembelajaran berhasil diperbarui oleh Guru!");
+        }
+
+        function shareWebsiteLink() {
+            const dummyUrl = window.location.href;
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(dummyUrl).then(() => {
+                    alert("Link media pembelajaran berhasil disalin ke clipboard! Siap dibagikan ke murid SPEMDA.");
+                }).catch(() => {
+                    document.execCommand('copy');
+                    alert("Link media pembelajaran berhasil disalin!");
+                });
+            } else {
+                alert("Link Media Pembelajaran: " + dummyUrl);
+            }
+        }
+    </script>
+</body>
+</html>
